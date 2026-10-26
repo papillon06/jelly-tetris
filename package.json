@@ -1,0 +1,7 @@
+{
+  "name": "jelly-drop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test tests/engine.test.mjs", "start": "python3 -m http.server 4178 --bind 127.0.0.1 --directory dist" }
+}
