@@ -1,9 +1,155 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#58c9ed"><meta name="description" content="整块果冻，自由落下。碰撞、形变、回弹，填满一行就消除。"><title>Jelly Drop · 果冻弹弹乐</title><link rel="stylesheet" href="./style.css"></head><body>
-<svg class="symbols" aria-hidden="true"><defs><symbol id="left" viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></symbol><symbol id="right" viewBox="0 0 24 24"><path d="m10 5 7 7-7 7"/></symbol><symbol id="rotate" viewBox="0 0 24 24"><path d="M19 7a8 8 0 1 0 1 8M20 3v5h-5"/></symbol><symbol id="drop" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M5 21h14"/></symbol><symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol><symbol id="play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol><symbol id="sound" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol><symbol id="mute" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></symbol><symbol id="reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></symbol><symbol id="help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 3h.01"/></symbol><symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol></defs></svg>
-<div class="sky"><span class="sun"></span><span class="cloud one"></span><span class="cloud two"></span><span class="horizon"></span></div>
-<div class="shell"><header><a class="brand" href="./"><span class="logo-gel"></span><span>JELLY DROP<small>果冻弹弹乐</small></span></a><div class="header-actions"><button id="sound-btn" class="icon-button" aria-label="关闭音效" aria-pressed="true"><svg><use href="#sound"/></svg></button><button id="help-btn" class="icon-button" aria-label="玩法说明"><svg><use href="#help"/></svg></button></div></header>
-<main><aside class="left-note"><span class="small-label">SQUISH. BOUNCE. POP.</span><h1>整块果冻。<br>整份快乐。</h1><p>看它落下、挤一挤，<br>再软乎乎地弹起来。</p><div class="key-guide"><span><kbd>←</kbd><kbd>→</kbd> 移动</span><span><kbd>↑</kbd> 旋转</span><span><kbd>空格</kbd> 快速落下</span><span><kbd>P</kbd> 暂停</span></div><span class="note-bottom">满一行，啵！就消掉。</span></aside>
-<section class="game" aria-label="果冻俄罗斯方块游戏"><div class="mobile-stats"><div>得分<strong id="score-mobile">0</strong></div><div>消除<strong><span id="lines-mobile">0</span><small> 行</small></strong></div><div>最佳<strong id="best-mobile">0</strong></div></div><div class="stage"><canvas id="game-canvas" width="800" height="1440" tabindex="0" aria-label="游戏棋盘，左右键移动，上键旋转，空格快速落下，P暂停"></canvas><div class="overlay" id="game-overlay"><div class="overlay-card"><span class="overlay-label" id="overlay-kicker">SOFT BODY · BIG FUN</span><h2 id="overlay-title">让果冻弹起来</h2><p id="overlay-description">整块落下，软软相撞。<br>填满一行，就会消除。</p><button class="primary-button" id="start-btn"><span>开始游戏</span><svg><use href="#play"/></svg></button><small id="overlay-hint">方向键移动 · 空格落下</small></div></div><div id="clear-toast" class="clear-toast"></div></div><div class="stage-footer"><span id="status-label">准备好，接住小果冻</span><div><button id="pause-btn" class="icon-button" aria-label="暂停游戏" disabled><svg><use href="#pause"/></svg></button><button id="restart-btn" class="icon-button" aria-label="重新开始" disabled><svg><use href="#reset"/></svg></button></div></div><div class="touch-controls" aria-label="游戏控制"><button data-action="left" aria-label="向左移动"><svg><use href="#left"/></svg></button><button data-action="right" aria-label="向右移动"><svg><use href="#right"/></svg></button><button data-action="rotate" aria-label="旋转方块"><svg><use href="#rotate"/></svg></button><button data-action="drop" class="drop-button" aria-label="快速落下"><svg><use href="#drop"/></svg><span>落下</span></button></div></section>
-<aside class="sidebar"><section class="score-panel"><span class="small-label">本局得分</span><strong id="score">0000</strong><div class="metric-row"><span>已消除</span><b><span id="lines">0</span> 行</b></div><div class="metric-row"><span>等级</span><b id="level">01</b></div><div class="best-row"><span>个人最佳</span><b id="best-score">0</b></div></section><section class="next-panel"><span class="small-label">接下来</span><canvas id="next-canvas" width="360" height="400" aria-label="接下来的三个果冻"></canvas></section><p class="sidebar-tip">落地后还能挪一挪。<br>让每一块都找到位置。</p></aside>
-</main><footer>一点重力，一点弹性，一整罐快乐。</footer></div>
-<dialog id="help-dialog"><button id="close-help" class="icon-button dialog-close" aria-label="关闭说明"><svg><use href="#close"/></svg></button><span class="small-label">HOW TO PLAY</span><h2>一起，软着陆。</h2><p>移动和旋转整块果冻，让它们填满横向一行。满行会消除，上面的果冻继续落下。</p><p>方向键 <b>← →</b> 移动，<b>↑</b> 旋转，<b>空格</b> 快速落下，<b>P</b> 暂停。落地后可以短暂调整位置。</p><p>手机上点击下方按钮，或在棋盘上左右滑动、轻点旋转、向下滑动落下。</p><button class="primary-button" id="got-it">知道啦</button></dialog><div class="sr-only" id="announcer" aria-live="polite"></div><script type="module" src="./app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#36b5e8">
+  <meta name="description" content="整块连体果冻俄罗斯方块：半透明糖果凝胶、重力自由下坠、接触压扁、重心失衡歪倒、碰撞挤压滑入空位、满行消除。">
+  <title>Jelly Drop · 果冻俄罗斯方块</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <svg class="symbols" aria-hidden="true">
+    <defs>
+      <symbol id="left" viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></symbol>
+      <symbol id="right" viewBox="0 0 24 24"><path d="m10 5 7 7-7 7"/></symbol>
+      <symbol id="rotate-ccw" viewBox="0 0 24 24"><path d="M5 7a8 8 0 1 1-1 8M4 3v5h5"/></symbol>
+      <symbol id="rotate-cw" viewBox="0 0 24 24"><path d="M19 7a8 8 0 1 0 1 8M20 3v5h-5"/></symbol>
+      <symbol id="drop" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M5 21h14"/></symbol>
+      <symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+      <symbol id="play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+      <symbol id="film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 9 6 3-6 3V9Z"/></symbol>
+      <symbol id="spark" viewBox="0 0 24 24"><path d="m12 3 2.4 5.6L20 11l-5.6 2.4L12 19l-2.4-5.6L4 11l5.6-2.4L12 3Z"/></symbol>
+      <symbol id="sound" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+      <symbol id="mute" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></symbol>
+      <symbol id="reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></symbol>
+      <symbol id="help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 3h.01"/></symbol>
+      <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="shell">
+    <header>
+      <a class="brand" href="./">
+        <span class="logo-gel"></span>
+        <span>JELLY TETRIS<small>软体果冻俄罗斯方块</small></span>
+      </a>
+      <div class="mode-bar" role="group" aria-label="演示与游戏模式">
+        <button id="mode-play-btn" class="pill-button active" type="button">
+          <svg><use href="#play"/></svg><span>自由畅玩</span>
+        </button>
+        <button id="mode-video-btn" class="pill-button" type="button">
+          <svg><use href="#film"/></svg><span>视频复刻演示</span>
+        </button>
+        <button id="mode-squeeze-btn" class="pill-button" type="button">
+          <svg><use href="#spark"/></svg><span>歪倒挤位实验</span>
+        </button>
+      </div>
+      <div class="header-actions">
+        <button id="sound-btn" class="icon-button" aria-label="关闭音效" aria-pressed="true"><svg><use href="#sound"/></svg></button>
+        <button id="help-btn" class="icon-button" aria-label="玩法说明"><svg><use href="#help"/></svg></button>
+      </div>
+    </header>
+
+    <main>
+      <aside class="left-note">
+        <span class="small-label">SOFT-BODY GEL PHYSICS</span>
+        <h1>整块果冻，<br>歪倒、挤压、Q弹入位。</h1>
+        <p>真 2D 软体网格物理：无内部格缝，触底压扁鼓起，重心悬空自然歪倒，撞击相邻果冻将其挤入旁边空位。</p>
+        <div class="key-guide">
+          <span><kbd>←</kbd><kbd>→</kbd> 左右移动 / 挤位</span>
+          <span><kbd>Q</kbd><kbd>↑</kbd><kbd>E</kbd> 逆/顺时针旋转</span>
+          <span><kbd>↓</kbd><kbd>空格</kbd> 加速 / 快速落下</span>
+          <span><kbd>V</kbd> 视频同款复刻演示</span>
+          <span><kbd>P</kbd> 暂停 / 继续</span>
+        </div>
+        <span class="note-bottom">横向一层被果冻铺满即消除，上层果冻失稳继续歪倒重堆叠。</span>
+      </aside>
+
+      <section class="game" aria-label="果冻俄罗斯方块舞台">
+        <div class="mobile-stats">
+          <div>得分<strong id="score-mobile">0</strong></div>
+          <div>消除<strong><span id="lines-mobile">0</span><small> 行</small></strong></div>
+          <div>最佳<strong id="best-mobile">0</strong></div>
+        </div>
+
+        <div class="stage">
+          <canvas id="game-canvas" width="1040" height="1640" tabindex="0" aria-label="果冻俄罗斯方块软体物理画布"></canvas>
+
+          <div id="caption-banner" class="caption-banner hidden" aria-live="polite"></div>
+
+          <div class="overlay" id="game-overlay">
+            <div class="overlay-card">
+              <span class="overlay-label" id="overlay-kicker">SOFT BODY · TIPPING &amp; SQUEEZE</span>
+              <h2 id="overlay-title">让果冻弹起来</h2>
+              <p id="overlay-description">一体成型糖果凝胶，重心失衡自然歪倒，<br>互相碰撞挤入旁边空位，铺满一行即消除。</p>
+              <div class="overlay-actions">
+                <button class="primary-button" id="start-btn" type="button">
+                  <span>开始游戏</span><svg><use href="#play"/></svg>
+                </button>
+                <div class="overlay-sub-actions">
+                  <button class="secondary-button" id="overlay-video-btn" type="button">
+                    <svg><use href="#film"/></svg><span>17s 视频同款复刻</span>
+                  </button>
+                  <button class="secondary-button" id="overlay-squeeze-btn" type="button">
+                    <svg><use href="#spark"/></svg><span>歪倒与挤位演示</span>
+                  </button>
+                </div>
+              </div>
+              <small id="overlay-hint">方向键移动 · Q/E/↑ 旋转 · 空格快速落下</small>
+            </div>
+          </div>
+
+          <div id="clear-toast" class="clear-toast"></div>
+        </div>
+
+        <div class="stage-footer">
+          <span id="status-label">准备好，接住软糯小果冻</span>
+          <div>
+            <button id="pause-btn" class="icon-button" aria-label="暂停游戏" disabled><svg><use href="#pause"/></svg></button>
+            <button id="restart-btn" class="icon-button" aria-label="重新开始" disabled><svg><use href="#reset"/></svg></button>
+          </div>
+        </div>
+
+        <div class="touch-controls" aria-label="游戏控制">
+          <button data-action="left" aria-label="向左移动"><svg><use href="#left"/></svg></button>
+          <button data-action="rotate-ccw" aria-label="逆时针旋转"><svg><use href="#rotate-ccw"/></svg></button>
+          <button data-action="rotate" aria-label="顺时针旋转"><svg><use href="#rotate-cw"/></svg></button>
+          <button data-action="right" aria-label="向右移动"><svg><use href="#right"/></svg></button>
+          <button data-action="drop" class="drop-button" aria-label="快速落下"><svg><use href="#drop"/></svg><span>落下</span></button>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <section class="score-panel">
+          <span class="small-label">本局得分</span>
+          <strong id="score">0000</strong>
+          <div class="metric-row"><span>已消除</span><b><span id="lines">0</span> 行</b></div>
+          <div class="metric-row"><span>等级</span><b id="level">01</b></div>
+          <div class="best-row"><span>个人最佳</span><b id="best-score">0</b></div>
+        </section>
+        <section class="next-panel">
+          <span class="small-label">接下来</span>
+          <canvas id="next-canvas" width="360" height="400" aria-label="接下来的果冻预览"></canvas>
+        </section>
+        <p class="sidebar-tip">落点偏斜会自然歪倒，撞击侧面能把旁边的果冻挤进空位。</p>
+      </aside>
+    </main>
+
+    <footer>一体成型糖果凝胶 · 重力歪倒 · 碰撞挤位 · 阻尼余晃</footer>
+  </div>
+
+  <dialog id="help-dialog">
+    <button id="close-help" class="icon-button dialog-close" aria-label="关闭说明"><svg><use href="#close"/></svg></button>
+    <span class="small-label">HOW TO PLAY</span>
+    <h2>软体果冻，自由堆叠。</h2>
+    <p>每一块果冻都是连续的弹性凝胶软体：触底会压扁鼓起、连体弯曲并回弹；支撑不足会绕接触点倾斜歪倒；新落下的果冻能把旁边的果冻挤压推入相邻空位。</p>
+    <p>键盘 <b>← →</b> 左右移动，<b>↑ / E</b> 顺时针旋转，<b>Q</b> 逆时针旋转，<b>↓ / 空格</b> 快速落下，<b>P</b> 暂停。</p>
+    <p>顶部可一键切换 <b>自由畅玩</b>、<b>视频复刻演示</b>（还原参考视频 5 步果冻堆叠与昼夜过渡）与 <b>歪倒挤位实验</b>。</p>
+    <button class="primary-button" id="got-it" type="button">知道啦</button>
+  </dialog>
+
+  <div class="sr-only" id="announcer" aria-live="polite"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
